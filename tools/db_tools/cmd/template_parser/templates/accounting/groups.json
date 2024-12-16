@@ -1,0 +1,56 @@
+{
+  "Assets": {
+    "children": [
+      {
+        "Current Assets": {
+          "children": [
+            {
+              "Bank Accounts": {
+                "description": "Assets held in your bank accounts.",
+                "children": [{ "National Bank": {} }]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "Fixed Assets": {
+          "children": []
+        }
+      },
+      {
+        "Investments": {
+          "children": []
+        }
+      }
+    ]
+  },
+  "Expenses": {
+    "children": [
+      {
+        "Car": {
+          "children": []
+        }
+      },
+      { "Bank Service Charges": {} },
+      { "Education": {} },
+      { "Utilites": {} },
+      { "Repairs": {} },
+      { "Travel and Entertainment": {} },
+      {
+        "Government": {
+          "children": [{ "Taxes": { "children": [] } }, { "Fines": {} }]
+        }
+      },
+      { "Services": {} },
+      {
+        "Insurance": {
+          "children": [{ "Health Insurance": {} }, { "Car Insurance": {} }]
+        }
+      }
+    ]
+  },
+  "Liabilities": [],
+  "Income": [],
+  "Equity": []
+}

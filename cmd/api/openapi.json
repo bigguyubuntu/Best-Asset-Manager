@@ -1,0 +1,2067 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Best Asset Tracker - OpenAPI 3.0",
+    "description": "The backend api for Best Asset Tracker (BAM) based on the OpenAPI 3.0 specification",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "accounting",
+      "description": "Everything to do with accounting and financial data"
+    },
+    {
+      "name": "financial_account",
+      "description": "An accounting account. Can either be a debit_increased account or credit_increased account, and it must belong to an accounting group."
+    },
+    {
+      "name": "financial_group",
+      "description": "An accounting group."
+    },
+    {
+      "name": "financial_transaction",
+      "description": "An accounting transaction."
+    },
+    {
+      "name": "financial_journal_entry",
+      "description": "An accounting journal entry."
+    },
+    {
+      "name": "tag",
+      "description": "A tag, also known as a label."
+    }
+  ],
+  "paths": {
+    "/api/accounting/account/find_by_ids": {
+      "get": {
+        "tags": ["accounting", "financial_account"],
+        "summary": "Find multiple accounts by ids",
+        "description": "Multiple accounts can be provided in a json object. To request multiple accounts just pass them comma seperated in the query. Just like this `something.com?ids=1,2,3`",
+        "parameters": [
+          {
+            "name": "ids",
+            "example":"/api/accounting/account/find_by_ids?ids=1,2,3",
+            "in": "query",
+            "description": "Ids of accounts requested",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation, and all accounts were found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FinancialAccount"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "An error has occured",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/accounting/account/find_by_name_and_group": {
+      "get": {
+        "tags": ["accounting", "financial_account"],
+        "summary": "Find account by its name and group id.",
+        "parameters": [
+          {
+            "name": "account_name",
+            "example":"/api/accounting/account/find_by_name_and_group?account_name=cash&group_id=3",
+            "in": "query",
+            "description": "Name of the requested account, names are case sensitive.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "group_id",
+            "example":"/api/accounting/account/find_by_name_and_group?account_name=cash&group_id=3",
+            "in": "query",
+            "description": "The id of the group that the account belongs in.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation, and account was found",
+            "content": {
+              "application/json": {
+                "schema": {
+                      "$ref": "#/components/schemas/FinancialAccount"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "An error has occured",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/accounting/account/find_all": {
+      "get": {
+        "tags": ["accounting", "financial_account"],
+        "summary": "Find all accounts",
+        "responses": {
+          "200": {
+            "description": "successful operation, and all accounts were found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FinancialAccount"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "An error has occured",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/accounting/account/find_by_group": {
+      "get": {
+        "tags": ["accounting", "financial_account"],
+        "summary": "Find multiple accounts belonging to a group",
+        "parameters": [
+          {
+            "name": "group_id",
+            "in": "query",
+            "description": "The group id for the the accounts",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation, and all accounts were found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FinancialAccount"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "An error has occured",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/accounting/account/create": {
+      "post": {
+        "tags": ["accounting", "financial_account"],
+        "summary": "Create a new financial account.",
+        "description": "This endpoint will return the ID of the newly created account. The account can either be debit_increased for accounts whose balance increase with debit like cash or expense accounts, or credit_increased for accounts whose balance increase with credit such as shareholders equity account",
+        "requestBody":{
+          "description": "Create a new financial account, do not pass an id field.",
+          "required": true,
+          "content": {
+              "application/json":{
+                  "schema":{
+                      "$ref": "#/components/schemas/FinancialAccount"
+                  }
+              }
+          }
+      },
+        "responses": {
+          "200": {
+            "description": "if successful operation and account was created, this endpoint will return the created account id",
+            "content": {
+              "text/plain":{
+                "schema":{
+                    "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, will return an error text",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "An error has occured, returns error text",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error, returns error text",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/accounting/group/create": {
+      "post": {
+        "tags": ["accounting", "financial_group"],
+        "summary": "Create a new financial group.",
+        "description": "This endpoint will return the ID of the newly created group. The groupType must either be assets, liabilities, or equity",
+        "requestBody":{
+            "description": "Create a new financial group, do not pass an id field.",
+            "required": true,
+            "content": {
+                "application/json":{
+                    "schema":{
+                        "$ref": "#/components/schemas/FinancialGroup"
+                    }
+                }
+            }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation, and group was created. Returns created group id",
+            "content": {
+              "text/plain":{
+                "schema":{
+                    "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, returns error text",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "An error has occured, returns error text",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error, returns error text",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/accounting/group/update": {
+      "post": {
+        "tags": ["accounting", "financial_group"],
+        "summary": "Update a financial group.",
+        "description": "This endpoint will return the ID of the upated group. The request body must contain a group with an id",
+        "requestBody":{
+            "description": "The updated financial group.",
+            "required": true,
+            "content": {
+                "application/json":{
+                    "schema":{
+                        "$ref": "#/components/schemas/FinancialGroup"
+                    }
+                }
+            }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation, and group was updated. Returns created group id",
+            "content": {
+              "text/plain":{
+                "schema":{
+                    "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, returns error text",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "An error has occured, returns error text",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error, returns error text",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/accounting/group/find_by_type": {
+        "get": {
+          "tags": ["accounting", "financial_group"],
+          "summary": "Find multiple groups by group type",
+          "description": "Request financial groups by group type ",
+          "parameters": [
+            {
+              "name": "type",
+              "in": "query",
+              "description": "type of groups requested",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation, and groups were found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/FinancialGroup"
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad Request",
+              "content": {
+                "text/plain": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "An error has occured",
+              "content": {
+                "text/plain": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "Unexpected error",
+              "content": {
+                "text/plain": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+    "/api/accounting/group/find_subgroups": {
+        "get": {
+          "tags": ["accounting", "financial_group"],
+          "summary": "Find subgroups belonging to the parent group provided.",
+          "description": "Request financial groups that are children of the provided parent group.",
+          "parameters": [
+            {
+              "name": "parent_group_id",
+              "in": "query",
+              "description": "The parent group id for which we will find subgroups. If you pass -1, the response will be the root groups that have no parent.",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation, and subgroups were found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/FinancialGroup"
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad Request",
+              "content": {
+                "text/plain": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "An error has occured",
+              "content": {
+                "text/plain": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "Unexpected error",
+              "content": {
+                "text/plain": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+    "/api/accounting/group/delete": {
+        "get": {
+          "tags": ["accounting", "financial_group"],
+          "summary": "Delete a financial group by id",
+          "parameters": [
+            {
+              "name": "group_id",
+              "in": "query",
+              "description": "type of groups requested",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation, and group was deleted",
+              "content": {
+                "text/plain": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad Request",
+              "content": {
+                "text/plain": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "An error has occured",
+              "content": {
+                "text/plain": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "Unexpected error",
+              "content": {
+                "text/plain": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "delete": {
+          "tags": ["accounting", "financial_group"],
+          "summary": "Delete a financial group by id",
+          "parameters": [
+            {
+              "name": "group_id",
+              "in": "query",
+              "description": "type of groups requested",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation, and group was deleted",
+              "content": {
+                "text/plain": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad Request",
+              "content": {
+                "text/plain": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "An error has occured",
+              "content": {
+                "text/plain": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "Unexpected error",
+              "content": {
+                "text/plain": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+    "/api/accounting/group/find_all": {
+        "get": {
+          "tags": ["accounting", "financial_group"],
+          "summary": "Get all groups",
+          "responses": {
+            "200": {
+              "description": "successful operation, and groups were found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/FinancialGroup"
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad Request",
+              "content": {
+                "text/plain": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "An error has occured",
+              "content": {
+                "text/plain": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "Unexpected error",
+              "content": {
+                "text/plain": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+    "/api/accounting/group/find_by_name_and_parent": {
+        "get": {
+          "tags": ["accounting", "financial_group"],
+          "summary": "Find group by its name and parent group id.",
+          "parameters": [
+            {
+              "name": "group_name",
+              "example":"/api/accounting/group/find_by_name_and_parent?group_name=Assets&parent_group_id=-1",
+              "in": "query",
+              "description": "Name of the requested group, names are case sensitive.",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "parent_group_id",
+              "example":"/api/accounting/group/find_by_name_and_parent?group_name=Assets&parent_group_id=-1",
+              "in": "query",
+              "description": "The id of the parent group that the requested group belongs in, if there is no parent, then put -1.",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation, and group was found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                        "$ref": "#/components/schemas/FinancialGroup"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad Request",
+              "content": {
+                "text/plain": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "An error has occured",
+              "content": {
+                "text/plain": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "Unexpected error",
+              "content": {
+                "text/plain": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+    "/api/accounting/group/find_by_ids": {
+        "get": {
+          "tags": ["accounting", "financial_group"],
+          "summary": "Find multiple groups by ids",
+          "description": "Multiple groups can be provided in a json object. To request multiple groups just pass them comma seperated in the query. Just like this `something.com?ids=1,2,3`",
+          "parameters": [
+            {
+              "name": "ids",
+              "example":"/api/accounting/group/find_by_ids?ids=1,2,3",
+              "in": "query",
+              "description": "Ids of group requested",
+              "required": true,
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation, and all groups were found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/FinancialGroup"
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad Request",
+              "content": {
+                "text/plain": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "An error has occured",
+              "content": {
+                "text/plain": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "Unexpected error",
+              "content": {
+                "text/plain": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+    "/api/accounting/journal_entry/create": {
+      "post": {
+        "tags": ["accounting", "financial_journal_entry", "financial_transaction"],
+        "summary": "Create a new financial journal entry, along with it's transactions.",
+        "description": "This endpoint will return the ID of the newly created journal entry.",
+        "requestBody":{
+            "description": "Create a new financial journal entry.You must at least pass two transactions. Create a new transaction.You must at least pass two transactions. The transactions only require an account_id and a transactionType.",
+            "required": true,
+            "content": {
+                "application/json":{
+                    "schema":{
+                        "type": "object",
+                        "properties": {
+                          "journal_entry":{
+                            "$ref": "#/components/schemas/FinancialJournalEntry"
+                          },
+                          "transactions":{
+                            "type": "array",
+                            "description": "The new transactions you want to create.",
+                            "items":{
+                              "$ref": "#/components/schemas/FinancialTransaction"
+                            }
+                          }
+                        }
+                    }
+                }
+            }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation, and journal entry was created. Returns created journal entry id, and created transaction ids.",
+            "content": {
+              "application/json":{
+                "schema":{
+                    "type": "object",
+                    "properties": {
+                      "created_journal_entry_id":{
+                        "type": "integer",
+                        "format": "int64"
+                      },
+                      "created_transactions":{
+                        "type": "array",
+                        "items":{
+                          "$ref": "#/components/schemas/FinancialTransaction"
+                        }
+                      }
+                    }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "bad request, returns error text",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "an error has occured, returns error text",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error, returns error text",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/accounting/journal_entry/update": {
+      "post": {
+        "tags": ["accounting", "financial_journal_entry"],
+        "summary": "update a financial journal entry.",
+        "description": "this endpoint will update a journal entry.",
+        "requestBody":{
+            "description": "updates a financial journal entry. you must pass the id and all the fields of the journal entry, even the ones you did not update. to update the transactions belonging to this journal entry, you can use the other endpoint made specific for the transactions.",
+            "required": true,
+            "content": {
+                "application/json":{
+                    "schema":{
+                        "$ref": "#/components/schemas/FinancialJournalEntry"
+                    }
+                }
+            }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation, and journal entry was updated"
+          },
+          "400": {
+            "description": "bad request, returns error text",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "an error has occured, returns error text",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error, returns error text",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/accounting/journal_entry/update_transactions": {
+      "post": {
+        "tags": ["accounting", "financial_journal_entry", "financial_journal_transaction"],
+        "summary": "updates the transactions belonging to a financial journal entry.",
+        "description": "this endpoint will update the transactions belonging to a journal entry.",
+        "requestBody":{
+            "description": "update new financial journal entry. you must pass the id and the new fields of the journal entry. to update the transactions belonging to this journal entry, you can use the other endpoint.",
+            "required": true,
+            "content": {
+                "application/json":{
+                    "schema":{
+                      "type": "object",
+                      "required": ["journal_entry", "created_transactions", "updated_transactions", "deleted_transaction_ids"],
+                      "properties": {
+                        "journal_entry":{
+                        "$ref": "#/components/schemas/FinancialJournalEntry"
+                        },
+                        "created_transactions": {
+                          "type": "array",
+                          "description":"an array of the newly created transactions. you should pass an id of zero, or use the field at all.",
+                          "items":{
+                            "$ref": "#/components/schemas/FinancialTransaction"
+                          }
+                        },
+                        "updated_transactions": {
+                          "type": "array",
+                          "description": "an array of the updated transactions, you must pass the transaction id along with all the transaction fields, even the fileds you did not update.",
+                          "items":{
+                            "$ref": "#/components/schemas/FinancialTransaction"
+                          }
+                        },
+                        "deleted_transaction_ids": {
+                          "type": "array",
+                          "description": "an array of the ids you wish to delete. note that a journal entry must always have at least two transactions.",
+                          "items":{
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                }
+            }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation, and journal entry transactions were updated",
+            "content": {
+              "application/json":{
+                "schema":{
+                  "type": "object",
+                  "properties": {
+                    "created_transactions":{
+                      "items":{
+                        "$ref": "#/components/schemas/FinancialTransaction"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "bad request, returns error text",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "an error has occured, returns error text",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error, returns error text",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/accounting/journal_entry/update_both_transactions_and_entry": {
+      "post": {
+        "tags": ["accounting", "financial_journal_entry", "financial_journal_transaction"],
+        "summary": "updates both the entry information as well as the transactions belonging that financial journal entry.",
+        "description": "this endpoint will update both a journal entry information and the transactions belonging to the journal entry.",
+        "requestBody":{
+            "description": "You must pass all the fields of both the transactions and the journal entry, even the fields you are not updating. In case you are creating a new transaction then set the id=0 for the created tranactions",
+            "required": true,
+            "content": {
+                "application/json":{
+                    "schema":{
+                      "type": "object",
+                      "required": ["journal_entry", "created_transactions", "updated_transactions", "deleted_transaction_ids"],
+                      "properties": {
+                        "journal_entry":{
+                        "$ref": "#/components/schemas/FinancialJournalEntry"
+                        },
+                        "created_transactions": {
+                          "type": "array",
+                          "description":"an array of the newly created transactions. you should pass an id of zero, or use the field at all.",
+                          "items":{
+                            "$ref": "#/components/schemas/FinancialTransaction"
+                          }
+                        },
+                        "updated_transactions": {
+                          "type": "array",
+                          "description": "an array of the updated transactions, you must pass the transaction id along with all the transaction fields, even the fileds you did not update.",
+                          "items":{
+                            "$ref": "#/components/schemas/FinancialTransaction"
+                          }
+                        },
+                        "deleted_transaction_ids": {
+                          "type": "array",
+                          "description": "an array of the ids you wish to delete. note that a journal entry must always have at least two transactions.",
+                          "items":{
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                }
+            }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation, and journal entry transactions were updated",
+            "content": {
+              "application/json":{
+                "schema":{
+                  "type": "object",
+                  "properties": {
+                    "created_transactions":{
+                      "items":{
+                        "$ref": "#/components/schemas/FinancialTransaction"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "bad request, returns error text",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "an error has occured, returns error text",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error, returns error text",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/accounting/journal_entry/find_all": {
+      "get": {
+        "tags": ["accounting", "financial_journal_entry"],
+        "summary": "Find all financial journal entries.",
+        "description": "This endpoint will return all journal entries.",
+        "responses": {
+          "200": {
+            "description": "successful operation, and all journal entries were found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FinancialJournalEntry"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "An error has occured",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/accounting/journal_entry/composite_find_all": {
+      "get": {
+        "tags": ["accounting", "financial_journal_entry", "financial_transaction", "financial_account"],
+        "summary": "Find all financial journal entries, along with their related accounts and transations.",
+        "description": "This endpoint will return all journal entries along with their related transactions and accounts.",
+        "responses": {
+          "200": {
+            "description": "successful operation, and all journal entries were found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FinancialJournalEntryComposite"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "An error has occured",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/accounting/journal_entry/composite_find_by_financial_account_id": {
+      "get": {
+        "tags": ["accounting", "financial_journal_entry", "financial_transaction", "financial_account"],
+        "summary": "Find financial journal entries, along with their related transations if they all have the specified financial account id.",
+        "description": "This endpoint will return all journal entries along with their related transactions based on the reqeuested accounts. The journal entries will be ordered by entry date.",
+        "parameters": [
+          {
+            "name": "account_id",
+            "in": "query",
+            "description": "the financial account id you want to find composite journal entries for",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation, and all journal entries were found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FinancialJournalEntryComposite"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "An error has occured",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/accounting/journal_entry/find_by_ids": {
+      "get": {
+        "tags": ["accounting", "financial_journal_entry"],
+        "summary": "Find financial journal entry by id.",
+        "description": "This endpoint will return the journal entriy.",
+        "parameters": [
+          {
+            "name": "ids",
+            "example":"/api/accounting/journal_entry/find_by_ids?ids=1,2,3",
+            "in": "query",
+            "description": "Ids of journal entries requested",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation, and all journal entries were found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FinancialJournalEntry"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "An error has occured",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/accounting/journal_entry/composite_find_by_id": {
+      "get": {
+        "tags": ["accounting", "financial_journal_entry", "financial_transaction", "financial_account"],
+        "summary": "Find financial journal entry by id, along with any accounts or transactions involved in that entry.",
+        "description": "This endpoint will return the journal entriy along with any involved transactions and accounts.",
+        "parameters": [
+          {
+            "name": "journal_entry_id",
+            "in": "path",
+            "description": "journal id to query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation, and journal entry composite was found. The journalEntries list will have only one journal entry with the id in the request",
+            "content": {
+              "application/json": {
+                "schema": {
+                    "$ref": "#/components/schemas/FinancialJournalEntryComposite"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "An error has occured",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/accounting/transaction/find_by_journal_entry":{
+      "get": {
+        "tags": ["accounting", "financial_journal_entry", "financial_transaction"],
+        "summary": "Find financial transactions by the journal entry id these transactions belong to.",
+        "description": "This endpoint will return the transactions belonging to the specified financial journal entry.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "the financial jounral entry id you want to find transactions for",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FinancialTransaction"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "An error has occured",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/accounting/transaction/find_by_journal_entries":{
+      "get": {
+        "tags": ["accounting", "financial_journal_entry", "financial_transaction"],
+        "summary": "Find financial transactions by the journal entry id these transactions belong to.",
+        "description": "This endpoint will return the transactions belonging to the specified financial journal entry.",
+        "parameters": [
+          {
+            "name": "ids",
+            "example":"/api/accounting/transaction/find_by_journal_entries?ids=1,2,3",
+            "in": "query",
+            "description": "Ids of journal entries we want transactions for",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "journal_entry_id":{
+                      "$ref": "#/components/schemas/FinancialTransaction"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "An error has occured",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/accounting/transaction/find_by_account":{
+      "get": {
+        "tags": ["accounting", "financial_journal_entry", "financial_transaction", "financial_account"],
+        "summary": "Find financial transactions by the account id these transactions belong to.",
+        "description": "This endpoint will return the transactions belonging to the specified financial account.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "the financial account id you want to find transactions for",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FinancialTransaction"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "An error has occured",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tag/{tag_id}": {
+      "get": {
+        "tags": ["tag"],
+        "summary": "Find Tag by id",
+        "description": "Returns a single Tag",
+        "parameters": [
+          {
+            "name": "tag_id",
+            "in": "path",
+            "example":"/api/tag/1",
+            "description": "Id of tag requested",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                    "$ref": "#/components/schemas/Tag"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "An error has occured",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tag/find_by_financial_journal_entry_id": {
+      "get": {
+        "tags": ["accounting", "tag", "financial_journal_entry"],
+        "summary": "Find all tags belonging to a financial journal entry",
+        "parameters": [
+          {
+            "name": "financial_journal_entry_id",
+            "in": "query",
+            "description": "The financial journal entry id you want to find the tags for.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation, and all tags were found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Tag"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "An error has occured",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tag/create": {
+      "post": {
+        "tags": ["tag"],
+        "summary": "Create a new tag.",
+        "requestBody":{
+            "required": true,
+            "content": {
+                "application/json":{
+                    "schema":{
+                        "$ref": "#/components/schemas/Tag"
+                    }
+                }
+            }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation, returns the created tag id",
+            "content": {
+              "text/plain":{
+                "schema":{
+                    "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, returns error text",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "An error has occured, returns error text",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error, returns error text",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "FinancialAccount": {
+        "type": "object",
+        "required": ["name", "accountType", "groupId", "balance"],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": { "type": "string", "description": "Names are case sensitive and must be unique." },
+          "description": { "type": "string" },
+          "accountType": {
+            "type": "string",
+            "description": "The type of account. The account can either be increased by debit, or increased by credit. When the account is increased by debit, then its balance will increase when we debit the account and decrease when we credit the account. Increase by credit accounts are the opposite.",
+            "enum": ["debit_increased", "credit_increased"]
+          },
+          "groupId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The financial group this account belongs to"
+          },
+          "balance": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The current balance of account in mils. Mils is a special unit that is an integer only and has no decimals, all amounts are multiplied by 1000. For example if balance is 1.25$ then we will return 1250, if balance is 0.001$ we return 1, if balance is 0.00001$ we return 0, if balance is 2000$ we return 2000000. If you want to convert back to dollars you can divide by 1000."
+          }
+        }
+      },
+      "FinancialGroup": {
+        "type": "object",
+        "required": ["name", "groupType", "parentId"],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": { "type": "string", "description": "Names are case sensitive and must be unique." },
+          "description": { "type": "string" },
+          "groupType": {
+            "type": "string",
+            "description": "The type of group.",
+            "enum": ["assets", "liabilities", "equity", "expenses", "income"]
+          },
+          "parentId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The parent group of this group, if there is no parent then put -1"
+          },
+          "balance": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The current balance of group in mils. Mils is a special unit that is an integer only and has no decimals, all amounts are multiplied by 1000. For example if balance is 1.25$ then we will return 1250, if balance is 0.001$ we return 1, if balance is 0.00001$ we return 0, if balance is 2000$ we return 2000000. If you want to convert back to dollars you can divide by 1000."
+          }
+        }
+      },
+      "FinancialJournalEntryWrite": {
+        "type": "object",
+        "description": "The journal entry object that you use when you do a write. This is for create and update requests",
+        "required": ["transactions"],
+        "properties": {
+            "id": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": { "type": "string" },
+            "tags":{
+                "type": "string"
+            },
+            "entryDate":{
+              "type":"string",
+              "description": "Has to be in the ISO-8601 format, for example 2023-11-30T19:04:17.263Z",
+              "example":"2023-11-30T19:04:17.263Z",
+              "format": "date-time",
+              "externalDocs": {"url": "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6"}
+          },
+            "transactions":{
+                "type":"array",
+                "description": "There have to be at least two transactions. If the debits and credits transactions in the journal entry aren't equal amounts, then the difference will be put in an auto created imbalance transaction.",
+                "items":{
+                    "$ref": "#/components/schemas/FinancialTransaction"
+                }
+            }
+          }
+      },
+      "FinancialJournalEntryComposite": {
+        "type": "object",
+        "description": "Financial journal entry along with all of its transactions and accounts in one object",
+        "required": ["transactions", "accounts"],
+        "allOf": [
+          {"$ref": "#/components/schemas/FinancialJournalEntry"}
+        ],
+        "properties": {
+            "transactions":{
+              "type": "object",
+              "properties": {
+                "id":{
+                    "$ref": "#/components/schemas/FinancialTransaction"
+                }
+              }
+            },
+            "accounts":{
+              "type": "object",
+              "properties": {
+                "id":{
+                    "$ref": "#/components/schemas/FinancialAccount"
+                }
+              }
+            }
+          }
+      },
+      "FinancialJournalEntry": {
+        "type": "object",
+        "properties": {
+            "id": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": { "type": "string" },
+            "tags":{
+                "type": "string"
+            },
+            "entryDate":{
+                "type":"string",
+                "description": "Has to be in the ISO-8601 format, for example 2023-11-30T19:04:17.263Z",
+                "example":"2023-11-30T19:04:17.263Z",
+                "format": "date-time",
+                "externalDocs": {"url": "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6"}
+            }
+      }
+    },
+      "FinancialTransaction": {
+        "type": "object",
+        "required": ["financialAccountId", "transactionType", "financialJournalEntryId"],
+        "properties": {
+            "id": {
+                "type": "integer",
+                "format": "int64"
+              },
+            "financialAccountId": {
+                "type": "integer",
+                "format": "int64"
+              },
+            "financialJournalEntryId": {
+                "description": "The id of the journal entry of this transaction. This field if you're creating a new transaction using the dedicated endpoint, but it is not required if you're passing the transaction as part of creating a new journal entry.",
+                "type": "integer",
+                "format": "int64"
+              },
+              "amount": {
+                "type": "integer",
+                "format": "int64",
+                "description": "The transaction amount in mils. Mils is a special unit that is an integer only and has no decimals, all amounts are multiplied by 1000. For example if balance is 1.25$ then we will return 1250, if balance is 0.001$ we return 1, if balance is 0.00001$ we return 0, if balance is 2000$ we return 2000000. If you want to convert back to dollars you can divide by 1000."
+              },
+              "transactionType": {
+                "type": "string",
+                "description": "The type of the transaction, it's either a debit or a credit.",
+                "enum": ["debit", "credit"]
+              }
+        }
+      },
+      "Tag":{
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "id":{
+            "type": "integer",
+            "format": "int64"
+          },
+          "name":{
+            "type": "string"
+          },
+          "description": { "type": "string" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{
+    "National Bank":[
+        {"name": "Savings Account", "description": "account number ending with 435"},
+        {"name": "2nd Savings Account", "description": "account number ending with 554"},
+        {"name": "Chequing Account", "description": "account number ending with 142"}
+    ],
+    "Fixed Assets": [
+        {"name": "House"},
+        {"name": "Car"},
+        {"name": "Furniture"},
+        {"name": "Land"}
+    ],
+    "Current Assets": [
+        {"name": "Cash"}
+    ],
+    "Investments": [
+        {"name": "Retirement Account"},
+        {"name": "Stocks"},
+        {"name": "Precious Metals"}
+    ],
+    "Car": [
+        {"name": "Fees"},
+        {"name": "Fuel"},
+        {"name": "Maintenance"}
+    ], 
+    "Insurance": [
+        {"name": "Car"},
+        {"name": "Health"}
+    ], 
+    "Taxes": [
+        {"name": "Income Tax"},
+        {"name": "Sales Tax"},
+        {"name": "Property Tax"}
+    ],
+    "Expenses": [
+        {"name": "Charity"},
+        {"name": "Transportation"},
+        {"name": "Rent"},
+        {"name": "Other Expenses"}
+    ],
+    "Utilites": [
+        {"name": "Electricity"},
+        {"name": "Water"},
+        {"name": "Gas"}
+    ],
+    "Income": [
+        {"name": "Salary"},
+        {"name": "Gifts"},
+        {"name": "Gas"}
+    ],
+    "Equity": [
+        {"name": "Opening Balances"},
+        {"name": "Owner Equity"}
+    ],
+    "Liabilities": [
+        {"name": "Credit card"}
+    ]
+}

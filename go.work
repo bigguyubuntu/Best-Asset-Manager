@@ -1,0 +1,7 @@
+go 1.21.1
+
+use (
+	./
+	./integration_tests/database_state
+	./tools/db_tools
+)
